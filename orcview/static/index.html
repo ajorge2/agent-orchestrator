@@ -1725,10 +1725,10 @@ function handleEvent(evt) {
     // if user drilled into a sub-agent during this run, pop back to parent view
     if (drillInIsLive) {
       drillInIsLive = false;
-      agentViewStack = [];
-      document.body.classList.remove("has-snapshot");
-      document.getElementById("snapshot-label").textContent = "";
-      _renderDrillBreadcrumb();
+      popAgentView();
+      toast("run complete", "ok");
+      _refreshHistIfOpen();
+      return;
     }
     toast("run complete", "ok");
     _refreshHistIfOpen();
@@ -2860,8 +2860,8 @@ function popAgentView() {
     const label = document.getElementById("snapshot-label").textContent;
     _setSnapshotBar(label, "History", openHist);
   } else {
-    // drilled in from a completed run (not a history snapshot) — just hide the bar
-    document.body.classList.remove("has-snapshot");
+    // drilled in from a completed run (not a history snapshot) — hide the bar
+    document.body.classList.remove("has-snapshot", "pre-run");
     document.getElementById("snapshot-label").textContent = "";
   }
   _renderDrillBreadcrumb();
