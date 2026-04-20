@@ -150,4 +150,4 @@ def serve(agent, port: int = 5050) -> None:
     print(f"\nOrcView running → http://localhost:{port}  [{agent.label}]")
     print("r + Enter to reload\n")
     _start_reload_listener()
-    app.run(port=port, debug=False, threaded=True)
+    app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
