@@ -1,5 +1,9 @@
 # Agent Orchestrator
 
+**[Live product](https://site--orcview--764vq9x779wv.code.run/)** · **[Evaluation evidence](https://ajorge2.github.io/agent-orchestrator/)**
+
+The evidence page separates product behavior, observed evaluation runs, exposed failure cases, and design targets that are not yet supported as resume metrics.
+
 > Build an AI agent, watch it think in real time, and trace everything it does back to a decision someone made on purpose.
 
 An AI agent is a program that reasons in a loop: it looks at a question, decides whether it needs a tool, uses the tool, looks at the result, and repeats until it has an answer. They're powerful — and they're black boxes. When one gives a wrong answer, loops forever, or quietly burns through your budget, the usual tools tell you *that* it failed, not *where* or *why*.
