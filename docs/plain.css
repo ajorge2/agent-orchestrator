@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
 :root {
   --ink: #202124 !important;
   --muted: #5f6368 !important;
@@ -17,7 +19,7 @@ html { background: #ffffff; }
 body {
   background: #ffffff !important;
   color: var(--ink) !important;
-  font: 15.5px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font: 15.5px/1.65 "Charis SIL", Georgia, "Times New Roman", serif !important;
 }
 
 main {
@@ -32,7 +34,7 @@ nav {
 }
 
 nav strong {
-  font: 600 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font: 600 14px/1.4 "Charis SIL", Georgia, "Times New Roman", serif !important;
 }
 
 nav div { gap: 16px !important; }
@@ -48,7 +50,7 @@ header { max-width: 800px !important; }
 .eyebrow,
 .tag {
   color: var(--muted) !important;
-  font: 500 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font: 500 13px/1.5 "Charis SIL", Georgia, "Times New Roman", serif !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
 }
@@ -160,7 +162,7 @@ td {
 
 th {
   color: var(--muted) !important;
-  font: 600 12px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font: 600 12px/1.4 "Charis SIL", Georgia, "Times New Roman", serif !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
 }
@@ -219,3 +221,6 @@ code {
   th:nth-child(n),
   td:nth-child(n) { display: table-cell !important; }
 }
+
+/* Use the page typeface for headings and interface text. */
+h1, h2, h3, h4, button, input, select, textarea { font-family: "Charis SIL", Georgia, "Times New Roman", serif !important; }
