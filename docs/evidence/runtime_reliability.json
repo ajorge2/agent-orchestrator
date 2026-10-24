@@ -1,0 +1,101 @@
+{
+  "environment": {
+    "python": "3.14.7",
+    "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "git_revision": "689be3a-dirty"
+  },
+  "fault_injection": {
+    "passed": 5,
+    "total": 5,
+    "scenarios": {
+      "malformed_output": {
+        "passed": true,
+        "error_count": 1,
+        "trace_events": [
+          "output_validation_failed"
+        ]
+      },
+      "timeout": {
+        "passed": true,
+        "attempts": 2,
+        "trace_events": [
+          "operation_attempt",
+          "operation_failure",
+          "retry_scheduled",
+          "operation_attempt",
+          "operation_success"
+        ]
+      },
+      "http_429": {
+        "passed": true,
+        "attempts": 2,
+        "trace_events": [
+          "operation_attempt",
+          "operation_failure",
+          "retry_scheduled",
+          "operation_attempt",
+          "operation_success"
+        ]
+      },
+      "agent_cycle": {
+        "passed": true,
+        "cycle_errors_traced": 1,
+        "parent_result": "cycle handled",
+        "trace_events": [
+          "started",
+          "run_config",
+          "transition",
+          "llm_response",
+          "transition",
+          "tool_call",
+          "sub_agent_start",
+          "started",
+          "run_config",
+          "transition",
+          "llm_response",
+          "transition",
+          "tool_call",
+          "sub_agent_start",
+          "error",
+          "run_metrics",
+          "done",
+          "sub_agent_end",
+          "tool_result",
+          "transition",
+          "llm_response",
+          "agent_text",
+          "transition",
+          "run_metrics",
+          "done"
+        ]
+      },
+      "tool_call_limit": {
+        "passed": true,
+        "completed_tool_calls": 1,
+        "returned_error": "exceeded 1 tool calls \u2014 possible loop",
+        "trace_events": [
+          "started",
+          "run_config",
+          "transition",
+          "llm_response",
+          "transition",
+          "tool_call",
+          "tool_result",
+          "guardrail_triggered",
+          "error",
+          "run_metrics",
+          "done"
+        ]
+      }
+    }
+  },
+  "instrumentation_overhead": {
+    "method": "median per-event time over paired callback and EventRecorder loops",
+    "iterations_per_repeat": 250000,
+    "repeats": 9,
+    "direct_callback_ns_per_event": 32.7,
+    "record_and_forward_ns_per_event": 148.0,
+    "incremental_overhead_ns_per_event": 115.3,
+    "incremental_overhead_us_per_1000_events": 115.3
+  }
+}

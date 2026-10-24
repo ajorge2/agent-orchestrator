@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+:root { --ink:#202124; --muted:#5f6368; --paper:#fff; --line:#dadce0; --green:#202124; --red:#202124; --amber:#202124; --blue:#202124; --teal:#202124; --violet:#202124; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--paper); color:var(--ink); }
+body { font:15.5px/1.65 "Charis SIL",Georgia,"Times New Roman",serif; }
+main { width:min(860px,calc(100% - 36px)); margin:0 auto; padding:24px 0 72px; }
+nav { display:flex; justify-content:space-between; align-items:baseline; gap:24px; margin-bottom:48px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+nav strong { font-size:14px; font-weight:600; }
+nav div { display:flex; gap:16px; flex-wrap:wrap; }
+nav a, .button { font:500 13px/1.5 "Charis SIL",Georgia,serif; color:var(--ink); text-decoration:underline; background:none; border:0; border-radius:0; padding:0; }
+a { color:var(--ink); text-underline-offset:3px; }
+header { max-width:800px; }
+h1,h2,h3,h4 { font-family:inherit; color:var(--ink); letter-spacing:-.01em; }
+h1 { font-size:26px; line-height:1.3; margin:0 0 18px; font-weight:700; }
+h2 { font-size:21px; line-height:1.3; margin:0 0 16px; font-weight:700; }
+h3 { font-size:17px; line-height:1.4; margin:24px 0 10px; }
+h4 { font-size:15.5px; margin:20px 0 8px; }
+section { margin:50px 0; }
+p { margin:0; padding-top:15.5px; }
+header p:first-child, section > p:first-child { padding-top:0; }
+.lede, .section-intro { max-width:800px; font-size:inherit; line-height:inherit; color:var(--ink); }
+.eyebrow, .tag, .label, .small, .frame-note { font:inherit; color:var(--muted); letter-spacing:0; text-transform:none; }
+.grid,.flow,.metrics,.pipeline { display:block; margin:24px 0; padding:0; border:0; }
+.card,.step,.metric-block,.decision,.failure,.gate,.boundary,.scope,.verdict,.withdrawn { display:block; background:none; border:0; border-radius:0; box-shadow:none; padding:0; margin:0; }
+.grid > .card + .card, .flow > .step + .step { margin-top:20px; }
+.metric { font:700 17px/1.5 "Charis SIL",Georgia,serif; margin:0; }
+.table-wrap { max-width:100%; overflow-x:auto; }
+table { width:100%; border-collapse:collapse; margin-top:20.5px; border:1px solid var(--line); }
+caption { text-align:left; caption-side:top; padding-bottom:12px; }
+th,td { text-align:left; vertical-align:top; padding:11px 10px; border:1px solid var(--line); }
+th { font-size:12px; font-weight:700; color:var(--muted); letter-spacing:0; text-transform:none; }
+.pass,.fail,.ok,.bad,.blocked,.pending,.warn { color:var(--ink); font-weight:700; }
+ul,ol { margin:14px 0 0; padding-left:24px; }
+li { margin:6px 0; }
+li > p:first-child { padding-top:0; }
+.artifacts,.links { display:block; border:0; margin:0; padding:0; }
+.artifact,.link,.links > a { display:block; padding:15.5px 0 0; border:0; border-radius:0; background:none; box-shadow:none; color:var(--ink); }
+.artifact span,.link span { font-size:inherit; font-weight:400; color:var(--ink); }
+.artifacts a { font-weight:700; }
+pre { max-width:100%; overflow-x:auto; padding:14px; border:1px solid var(--line); background:#fafafa; font-size:13px; line-height:1.55; }
+code { font-size:.9em; overflow-wrap:anywhere; }
+pre code { font-size:inherit; overflow-wrap:normal; }
+img,svg,video { max-width:100%; height:auto; }
+figure { margin:24px 0; }
+figcaption { color:var(--muted); font-size:13px; margin-top:8px; }
+.note { margin-top:50px; padding:18px 20px 0; border-top:1px solid var(--line); color:#878c92; font-style:italic; font-weight:400; }
+.note strong { font-weight:700; }
+.method-branch { position:relative; padding-left:2.5rem; }
+.method-branch::before { content:""; position:absolute; left:4px; top:0; bottom:0; border-left:1px solid var(--ink); }
+.method-branch:first-child::before { top:calc(15.5px + .825em); }
+.method-branch:last-child::before { bottom:auto; height:calc(15.5px + .825em); }
+.method-branch::after { content:""; position:absolute; left:4px; top:calc(15.5px + .825em); width:calc(2.5rem - 14px); border-top:1px solid var(--ink); }
+.method-evidence { display:block; position:relative; margin-top:5px; padding-left:2.5rem; }
+.method-evidence::before { content:""; position:absolute; left:4px; top:-5px; height:calc(5px + .825em); width:calc(2.5rem - 14px); border-left:1px solid var(--ink); border-bottom:1px solid var(--ink); }
+@media(max-width:760px) { main { width:calc(100% - 28px); } nav { flex-direction:column; align-items:flex-start; gap:12px; margin-bottom:36px; } section { margin:42px 0; } table { font-size:14px; } th,td { padding:9px 8px; } }
+.provenance { color:var(--muted); font-size:13px; padding-top:12px; }
+/* Some analyses keep their site header outside the reading column. */
+body > header { width:min(860px,calc(100% - 36px)); max-width:none; margin:0 auto; padding:24px 0 14px; display:flex; justify-content:space-between; align-items:baseline; gap:24px; border-bottom:1px solid var(--line); }
+body > header > a { font-size:14px; font-weight:700; text-decoration:none; }
+body > header nav { margin:0; padding:0; border:0; gap:16px; flex-wrap:wrap; }
+body > header + main { padding-top:0; }
+body > footer { width:min(860px,calc(100% - 36px)); margin:0 auto; padding:20px 0 48px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+body > footer > div { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+@media(max-width:760px) { body > header { width:calc(100% - 28px); flex-direction:column; gap:12px; } body > footer { width:calc(100% - 28px); } body > header nav { flex-direction:row; } }
+/* Match the analysis-page rhythm for prose and unwrapped Markdown headings. */
+h2 { margin-bottom:0; }
+main > h2 { margin-top:50px; }
+@media(max-width:760px) { main > h2 { margin-top:42px; } }
