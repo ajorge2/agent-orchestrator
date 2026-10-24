@@ -26,18 +26,18 @@ async function selectFinding(finding,button){
  try{const index=Number(finding.event_id.split(':e').at(-1));const data=await tool('inspect_run',{run_id:runId,offset:index,limit:1,include_content:true});const hit=data.events.find(e=>e.event_id===finding.event_id);if(!hit)throw new Error('The cited event was not returned. Retry the investigation.');
  hierarchy(hit.event._sub_run_id);$('event-citation').textContent=hit.event_id+' · '+owner(hit.event);$('event-json').textContent=JSON.stringify(hit.event,null,2);
  $('event-explanation').textContent=hit.event.type==='tool_result'?'The recorded order lookup returned an error: '+hit.event.result+'.':hit.event.type==='guardrail_triggered'?'The analyst recorded a '+hit.event.guardrail+' guardrail with limit '+hit.event.limit+'.':hit.event.type==='retry_scheduled'?'A retry was scheduled for the analyst. A retry alone does not establish that the run failed.':'The coordinator recorded: '+hit.event.message+'.';
- $('evidence-panel').hidden=false;document.querySelectorAll('.finding').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));$('status').textContent='Evidence retrieved from '+hit.event_id+'.';$('evidence-panel').focus();
+ $('evidence-panel').hidden=false;$('evidence-empty').hidden=true;document.querySelectorAll('.finding').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));$('status').textContent='Evidence retrieved from '+hit.event_id+'.';$('evidence-panel').focus();
  }catch(e){$('status').textContent=e.message;}finally{busy=false;document.querySelectorAll('.finding').forEach(b=>b.disabled=false);}
 }
 $('investigate').addEventListener('click',async()=>{
- if(busy)return;busy=true;$('investigate').disabled=true;$('calls').replaceChildren();$('findings').replaceChildren(node('p','Retrieving the run…','muted'));$('evidence-panel').hidden=true;$('hierarchy-panel').hidden=true;$('status').textContent='Connecting to the MCP server…';
+ if(busy)return;busy=true;$('investigate').disabled=true;$('calls').replaceChildren();$('findings').replaceChildren(node('p','Retrieving the run…','muted'));$('evidence-panel').hidden=true;$('evidence-empty').hidden=false;$('hierarchy-panel').hidden=true;$('status').textContent='Connecting to the MCP server…';
  try{
   await rpc('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'orcview-guided-investigation',version:'1.0.0'}});
   const runs=await tool('list_runs',{});if(!runs.run_ids.includes(runId))throw new Error('The example run is unavailable. Retry shortly.');
   const run=await tool('inspect_run',{run_id:runId,include_content:true});
   const failures=await tool('find_failures',{run_id:runId,include_content:true});const tree=await tool('inspect_hierarchy',{run_id:runId});children=tree.children;
   $('findings').replaceChildren(node('p',failures.total+' diagnostic events · '+run.event_count+' recorded events','muted'));
-  failures.findings.forEach(f=>{const button=node('button',undefined,'finding');button.type='button';button.setAttribute('aria-pressed','false');button.append(node('strong',titles[f.event.type]||f.event.type),node('small',owner(f.event)+' · '+f.event_id));button.addEventListener('click',()=>selectFinding(f,button));$('findings').append(button);});
+  failures.findings.forEach(f=>{const button=node('button',undefined,'finding');button.dataset.kind=f.event.type;button.type='button';button.setAttribute('aria-pressed','false');button.append(node('strong',titles[f.event.type]||f.event.type),node('small',owner(f.event)+' · '+f.event_id));button.addEventListener('click',()=>selectFinding(f,button));$('findings').append(button);});
   if(!failures.total)$('findings').append(node('p','No diagnostic events returned.'));
   hierarchy(null);$('hierarchy-panel').hidden=false;$('status').textContent='Investigation ready. Select a finding to retrieve its exact event.';$('investigate').textContent='Run investigation again';
  }catch(e){$('status').textContent=e.message;$('findings').replaceChildren(node('p','Investigation incomplete. Retry to retrieve fresh evidence.'));}finally{busy=false;$('investigate').disabled=false;}

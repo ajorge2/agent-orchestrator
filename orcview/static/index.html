@@ -5,23 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OrcView</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/static/orcview-theme.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --bg:          #090b10;
-  --bg-panel:    #0d0f17;
-  --border:      #1a1d2a;
-  --accent:      #1a5fff;
-  --accent-dim:  rgba(26, 95, 255, 0.10);
-  --muted:       #6b7190;
-  --text:        #c8ccdc;
-  --dim:         #2a2d3e;
-  --visited:     #1a6b30;
-  --visited-dim: rgba(26, 107, 48, 0.10);
-  --done:        #7b3fff;
-  --done-dim:    rgba(123, 63, 255, 0.10);
-}
+
 
 html, body {
   height: 100%;
@@ -33,16 +21,7 @@ html, body {
 }
 
 /* film grain */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-}
+
 
 /* scrollbars */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
