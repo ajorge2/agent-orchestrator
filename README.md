@@ -272,3 +272,5 @@ See [PRIVACY.md](PRIVACY.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md
 ## Guided public investigation
 
 The runtime dashboard remains the web entry point, with an “Investigate sample run” link opening `/investigate`. It calls the actual `/mcp/orcview/server` endpoint to list runs, inspect the selected synthetic recording, find diagnostic events, and retrieve the explicit agent hierarchy. Selecting a finding retrieves its exact cited event through MCP. Requests and responses remain inspectable in the interface; the investigation uses no model calls. The existing execution and replay dashboard remains at `/runtime`, and local MCP installation remains at `/mcp/orcview/#local`.
+
+The investigation intentionally contains no connection commands, installation guide, or privacy guide. Its single MCP setup link delegates those workflows to the existing `/mcp/orcview/` site.
