@@ -23,7 +23,7 @@ const state=document.getElementById('result-state');
 let nextId=1;
 async function rpc(method,params) {
  const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json, text/event-stream','MCP-Protocol-Version':'2025-11-25'},body:JSON.stringify({jsonrpc:'2.0',id:nextId++,method,params}),cache:'no-store',credentials:'omit'});
- if(!response.ok)throw new Error(response.status===429?'The demo is busy. Please retry in a moment.':'The live sample is temporarily unavailable. Please retry.');
+ if(!response.ok)throw new Error(response.status===429?'The demo is busy. Please retry in a moment.':'The example is temporarily unavailable. Please retry.');
  const text=await response.text();
  let message;
  if(response.headers.get('content-type')?.includes('text/event-stream')){const rows=text.split('\n').filter(x=>x.startsWith('data: '));message=JSON.parse(rows.at(-1).slice(6));}else message=JSON.parse(text);
@@ -47,14 +47,14 @@ function render(data){
 }
 async function run(index,button){
  document.querySelectorAll('.example').forEach(b=>{b.disabled=true;b.classList.toggle('selected',b===button);});
- label.textContent=list[index].tool;state.textContent='CONNECTING';body.innerHTML='<p class="muted">Calling the live MCP server…</p>';
+ label.textContent=list[index].tool;state.textContent='CONNECTING';body.innerHTML='<p class="muted">Running the example…</p>';
  document.getElementById('raw-panel').hidden=true;
  try{
   await rpc('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'public-mcp-sample-page',version:'1.0.0'}});
   const result=await rpc('tools/call',{name:list[index].tool,arguments:list[index].args});
-  if(result.isError)throw new Error('The sample tool returned an error. Please retry.');
+  if(result.isError)throw new Error('The example tool returned an error. Please retry.');
   const data=result.structuredContent||JSON.parse(result.content.find(x=>x.type==='text').text);
-  body.innerHTML=render(data);state.textContent='LIVE RESPONSE';
+  body.innerHTML=render(data);state.textContent='EXAMPLE RESULT';
   document.getElementById('raw-output').textContent=JSON.stringify(result,null,2);document.getElementById('raw-panel').hidden=false;
  }catch(error){state.textContent='PLEASE RETRY';body.innerHTML='<p>'+escape(error.message)+'</p>';}
  finally{document.querySelectorAll('.example').forEach(b=>b.disabled=false);}
