@@ -50,18 +50,20 @@ body::after {
 ::-webkit-scrollbar-thumb { background: var(--dim); }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
+.demo-notice { padding: 8px 16px; font: 12px/1.5 system-ui, sans-serif; text-align: center; color: #a4abc3; border-bottom: 1px solid var(--border); }
+.demo-notice a { color: #91adff; text-underline-offset: 3px; }
 /* page grid */
 body {
   display: grid;
-  grid-template-rows: 32px 0px 1fr 120px 40px;
+  grid-template-rows: auto auto 0px 1fr 120px 40px;
   transition: grid-template-rows 0.18s ease;
 }
-body.ir-collapsed { grid-template-rows: 32px 0px 1fr 28px 40px; }
-body.pre-run      { grid-template-rows: 32px 0px 1fr 0px  40px !important; }
-body.has-snapshot { grid-template-rows: 32px 26px 1fr 120px 40px; }
+body.ir-collapsed { grid-template-rows: auto auto 0px 1fr 28px 40px; }
+body.pre-run      { grid-template-rows: auto auto 0px 1fr 0px  40px !important; }
+body.has-snapshot { grid-template-rows: auto auto 26px 1fr 120px 40px; }
 body.has-snapshot .snapshot-bar { visibility: visible; }
-body.has-snapshot.ir-collapsed { grid-template-rows: 32px 26px 1fr 28px 40px; }
-body.has-snapshot.pre-run { grid-template-rows: 32px 26px 1fr 0px 40px !important; }
+body.has-snapshot.ir-collapsed { grid-template-rows: auto auto 26px 1fr 28px 40px; }
+body.has-snapshot.pre-run { grid-template-rows: auto auto 26px 1fr 0px 40px !important; }
 body.has-snapshot .h-cfg-btn,
 body.has-snapshot .h-hist-btn { display: none; }
 
@@ -104,8 +106,10 @@ body.has-snapshot .h-hist-btn { display: none; }
 header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 0 14px;
+  gap: 12px;
+  min-height: 40px;
+  flex-wrap: wrap;
+  padding: 8px 14px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -137,7 +141,8 @@ header {
 /* 2-column main */
 .main {
   display: grid;
-  grid-template-columns: 1fr 220px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  min-height: 0;
   overflow: hidden;
   transition: grid-template-columns 0.18s ease;
 }
@@ -1324,7 +1329,7 @@ body.pre-run .main { grid-template-columns: 1fr 0px !important; }
 </style>
 </head>
 <body>
-<div style="padding:8px 16px;font:12px sans-serif;text-align:center">Public demo: questions and selected bundled source go to Anthropic. History stays in this browser session for up to one hour; no shared run archive. Use fictional inputs. <a href="/mcp/orcview/">Local MCP &amp; privacy</a></div>
+<div class="demo-notice">Public demo: questions and selected bundled source go to Anthropic. History stays in this browser session for up to one hour; no shared run archive. Use fictional inputs. <a href="/mcp/orcview/">Local MCP &amp; privacy</a></div>
 
 <header>
   <span class="h-title">OrcView</span>
