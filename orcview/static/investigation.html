@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OrcView — Investigate an agent run</title><link rel="stylesheet" href="/static/investigation.css"><script src="/static/investigation.js" defer></script></head>
+<body><main><nav><a class="brand" href="/">OrcView</a><div><a href="/runtime">Runtime dashboard</a><a href="/mcp/orcview/#connect">Use your own runs</a></div></nav>
+<header><p class="eyebrow">Agent trace investigation</p><h1>Find where an agent run went wrong.</h1><p>Follow a failed tool call through a delegated task, then inspect the event behind each finding.</p></header>
+<section class="case" aria-labelledby="case-title"><div><span class="badge">Synthetic recorded example</span><h2 id="case-title">Inspect synthetic orders</h2><p>A coordinator delegates an order lookup to an analyst. Investigate the recorded failure.</p></div><button id="investigate">Investigate this run</button></section>
+<p id="status" role="status" aria-live="polite">The investigation calls the live MCP server. No model calls are needed.</p>
+<div class="workspace"><section aria-labelledby="findings-title"><h2 id="findings-title">Findings</h2><div id="findings"><p class="muted">Start the investigation to retrieve the recorded events.</p></div><section id="hierarchy-panel" hidden><h3>Agent hierarchy</h3><div id="hierarchy"></div></section><section id="evidence-panel" hidden tabindex="-1"><h3>Selected event</h3><p id="event-citation" class="citation"></p><p id="event-explanation"></p><pre id="event-json"></pre></section></section>
+<aside aria-labelledby="calls-title"><h2 id="calls-title">Actual MCP calls</h2><p class="muted">Requests and returned evidence appear here as they complete.</p><ol id="calls"></ol></aside></div>
+<footer><a href="/mcp/orcview/#local">Inspect your Codex or Claude Code runs locally →</a><p>This example uses bundled synthetic events, not a live agent execution or performance benchmark. Explanations are derived from returned events; no AI diagnosis is generated.</p></footer>
+</main></body></html>

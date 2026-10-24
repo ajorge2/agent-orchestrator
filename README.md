@@ -268,3 +268,7 @@ The dedicated pages provide hosted examples, remote client configuration, and ve
 ## Current privacy defaults
 
 See [PRIVACY.md](PRIVACY.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). SDK disk recording is opt-in; hosted browser history/configuration is session-isolated and temporary. The local MCP does not create recordings.
+
+## Guided public investigation
+
+The web entry point opens a sample trace investigation. It calls the actual `/mcp/orcview/server` endpoint to list runs, inspect the selected synthetic recording, find diagnostic events, and retrieve the explicit agent hierarchy. Selecting a finding retrieves its exact cited event through MCP. Requests and responses remain inspectable in the interface; the investigation uses no model calls. The existing execution and replay dashboard remains at `/runtime`, and local MCP installation remains at `/mcp/orcview/#local`.

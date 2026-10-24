@@ -108,6 +108,10 @@ def create_app(agent):
 
     @app.route("/")
     def index():
+        return send_from_directory(static_dir, "investigation.html")
+
+    @app.route("/runtime")
+    def runtime():
         return send_from_directory(static_dir, "index.html")
 
     @app.route("/run")
