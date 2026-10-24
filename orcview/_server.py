@@ -107,12 +107,13 @@ def create_app(agent):
         return Response((Path(__file__).parent.parent / "PRIVACY.md").read_text(), mimetype="text/plain")
 
     @app.route("/")
-    def index():
-        return send_from_directory(static_dir, "investigation.html")
-
     @app.route("/runtime")
-    def runtime():
+    def index():
         return send_from_directory(static_dir, "index.html")
+
+    @app.route("/investigate")
+    def investigation():
+        return send_from_directory(static_dir, "investigation.html")
 
     @app.route("/run")
     def run():

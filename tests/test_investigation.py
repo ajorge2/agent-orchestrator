@@ -5,7 +5,8 @@ from starlette.testclient import TestClient
 
 def test_guided_entrypoint_preserves_runtime():
     with TestClient(create_public_app(create_app(FakeAgent())), base_url='http://localhost:9021') as client:
-        assert 'Investigate this run' in client.get('/').text
+        assert 'Investigate sample run' in client.get('/').text
+        assert 'Investigate this run' in client.get('/investigate').text
         assert 'cfg-max-cycles' in client.get('/runtime').text
         assert client.get('/static/investigation.js').status_code == 200
         headers={'accept':'application/json,text/event-stream'}
