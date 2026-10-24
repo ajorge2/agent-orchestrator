@@ -2,8 +2,9 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
+license = "MIT"
 name = "orcview"
-version = "0.2.0"
+version = "0.2.1"
 description = "Inspect project-scoped agent traces using your existing AI model."
 requires-python = ">=3.11"
 dependencies = ["mcp==2.3.0"]

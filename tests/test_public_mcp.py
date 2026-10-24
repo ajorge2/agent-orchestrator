@@ -13,7 +13,7 @@ def test_public_asgi_pages_and_legacy_routes():
     with TestClient(create_public_app(legacy),base_url='http://localhost:9021') as c:
         assert c.get('/').text=='Original UI route'
         assert c.get('/mcp/orcview/').status_code==200
-        assert c.get('/mcp/install/orcview-0.2.0-py3-none-any.whl').status_code==200
+        assert c.get('/mcp/install/orcview-0.2.1-py3-none-any.whl').status_code==200
         assert c.get('/mcp/health').json()['sample_only'] is True
         result=c.post('/mcp/sqlharness/server',headers={'accept':'application/json,text/event-stream'},json={'jsonrpc':'2.0','id':1,'method':'initialize','params':{'protocolVersion':'2025-11-25','capabilities':{},'clientInfo':{'name':'test','version':'1'}}})
         assert result.status_code==200

@@ -1324,6 +1324,7 @@ body.pre-run .main { grid-template-columns: 1fr 0px !important; }
 </style>
 </head>
 <body>
+<div style="padding:8px 16px;font:12px sans-serif;text-align:center">Public demo: questions and selected bundled source go to Anthropic. History stays in this browser session for up to one hour; no shared run archive. Use fictional inputs. <a href="/mcp/orcview/">Local MCP &amp; privacy</a></div>
 
 <header>
   <span class="h-title">OrcView</span>
@@ -1516,6 +1517,9 @@ let currentState  = null;
 let visitedStates = new Set();
 let stateEvents   = {};
 let allEvents     = [];
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
 let activeEventSource = null;
 
 // ── SVG helpers ───────────────────────────────────────────────────────────
@@ -1954,7 +1958,7 @@ function toast(msg, type = "") {
 
 // ── run ───────────────────────────────────────────────────────────────────
 
-function startRun() {
+async function startRun() {
   const question = document.getElementById("question").value.trim();
   if (!question) return;
 
@@ -1978,7 +1982,16 @@ function startRun() {
 
   toast("dispatching agent", "");
 
-  const es = new EventSource(`/run?question=${encodeURIComponent(question)}`);
+  const prepared = await fetch('/run', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({question})}).catch(() => null);
+  if (!prepared?.ok) {
+    btn.disabled = false; btn.textContent = "Execute";
+    cancelBtn.style.display = "none";
+    document.getElementById("pulse-dot").classList.remove("on");
+    toast("Could not start run; retry shortly", "");
+    return;
+  }
+  const {ticket} = await prepared.json();
+  const es = new EventSource(`/run?ticket=${encodeURIComponent(ticket)}`);
   activeEventSource = es;
 
   function _finishRun() {
@@ -2421,7 +2434,7 @@ function _renderDrillBreadcrumb() {
     const sep = i > 0 ? `<span class="bc-sep">›</span>` : "";
     const cls = isCurrent ? "bc-item bc-current" : "bc-item";
     const click = !isCurrent ? `onclick="popAgentView()"` : "";
-    return `${sep}<span class="${cls}" ${click}>${label}</span>`;
+    return `${sep}<span class="${cls}" ${click}>${escapeHtml(label)}</span>`;
   }).join("");
 }
 
@@ -2432,7 +2445,7 @@ function renderAgentBreadcrumb() {
     const sep = i > 0 ? `<span class="bc-sep">›</span>` : "";
     const cls = isCurrent ? "bc-item bc-current" : "bc-item";
     const click = isCurrent ? "" : `onclick="navToDepth(${i})"`;
-    return `${sep}<span class="${cls}" ${click}>${entry.label}</span>`;
+    return `${sep}<span class="${cls}" ${click}>${escapeHtml(entry.label)}</span>`;
   }).join("");
 }
 
@@ -2474,11 +2487,11 @@ function renderAgentToolsList(cfg) {
     const label = at.label || `Agent ${i + 1}`;
     const isCycle = ancestorLabels.has(label);
     const openBtn = isCycle
-      ? `<button class="cfg-open-btn" disabled title="Would create a cycle — '${label}' is already an ancestor" style="opacity:0.35;cursor:not-allowed">cycle ⚠</button>`
+      ? `<button class="cfg-open-btn" disabled title="Would create a cycle — '${escapeHtml(label)}' is already an ancestor" style="opacity:0.35;cursor:not-allowed">cycle ⚠</button>`
       : `<button class="cfg-open-btn" onclick="openSubAgent(${i})">open →</button>`;
     return `
     <div class="cfg-agent-tool-row">
-      <input class="cfg-agent-label-input" value="${label}"
+      <input class="cfg-agent-label-input" value="${escapeHtml(label)}"
              oninput="cfg_agent_tools[${i}].label=this.value; renderAgentToolsList(configStack[configStack.length-1].config); renderAgentBreadcrumb()">
       ${openBtn}
       <button class="cfg-del-btn" onclick="deleteAgentTool(${i})">×</button>
@@ -2688,9 +2701,9 @@ function renderHistRunList() {
     const div = document.createElement("div");
     div.className = "hist-run-item"; div.dataset.id = r.run_id;
     const err = r.error ? `<span class="hist-run-err">err</span>` : "";
-    const agentTag = r.agent_label ? `<span style="color:var(--accent);letter-spacing:0.06em">${r.agent_label}</span>` : "";
+    const agentTag = r.agent_label ? `<span style="color:var(--accent);letter-spacing:0.06em">${escapeHtml(r.agent_label)}</span>` : "";
     div.innerHTML = `
-      <div class="hist-run-q">${r.question}</div>
+      <div class="hist-run-q">${escapeHtml(r.question)}</div>
       <div class="hist-run-meta">
         ${agentTag}
         <span>${r.created_at.slice(0,16)}</span>

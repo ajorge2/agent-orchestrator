@@ -135,17 +135,15 @@ The data-analyst agent is where the reliability patterns were hardened against a
 
 **Why this matters:** the second pattern is the difference between a brittle demo and something that works. A tool that just throws turns a typo into a dead run. A tool that explains what went wrong turns the model into a self-correcting system. Error messages here are treated as a coaching channel, not just a failure report.
 
-### 7. Record first, then announce
+### 7. Explicit recording and private browser history
 
-Every run is saved to a local database so the history panel can replay it later. There's a small ordering trap: the browser, on seeing a run finish, immediately asks for the updated history. If the save hasn't happened yet, the run it's looking for isn't there.
+The SDK collects and emits events in memory. Disk recording requires `Agent(..., record_runs=True)` and is disabled by default. Opted-in local runs are saved before the completion event. Those records can include questions, prompts, tool inputs, and outputs; the operator controls retention.
 
-So the save always completes *before* the "done" signal is sent. By the time the UI knows a run finished, the record is already on disk. A one-line ordering decision that removes an entire class of race condition.
+The hosted dashboard keeps a bounded history in each private browser session, without a shared SQLite archive. Sessions expire after an hour of inactivity; the next request or process exit performs cleanup. Your questions and selected bundled source still go to Anthropic when a run starts.
 
-### 8. Versions, so you can tell whether a change actually helped
+### 8. Session-scoped configuration versions
 
-Prompt engineering is mostly guessing unless you can compare. Every meaningful change — the model, the system prompt, the enabled tools — opens a new version, and every run is filed under the version that produced it.
-
-**Why this matters:** "the new prompt is better" stops being a feeling. You can look at the runs under each version and compare cost, latency, and behavior directly. The system turns iteration into something you can measure instead of something you remember.
+Configuration changes apply to the current browser session. A change after a recorded session run starts a new session version so the history view can compare runs without exposing another visitor's configuration or traces.
 
 ### 9. A dashboard with no build step
 
@@ -266,3 +264,7 @@ Both need an Anthropic API key in a `.env` file (`ANTHROPIC_API_KEY=...`) and th
 [OrcView MCP](https://site--orcview--764vq9x779wv.code.run/mcp/orcview/)
 
 The dedicated pages provide hosted examples, remote client configuration, and versioned local-install packages. These MCP routes make no model calls and require no model credentials. Public tools have no personal-data upload or root-selection capability. See [the deployment and privacy contract](docs/mcp-publishing.md).
+
+## Current privacy defaults
+
+See [PRIVACY.md](PRIVACY.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). SDK disk recording is opt-in; hosted browser history/configuration is session-isolated and temporary. The local MCP does not create recordings.

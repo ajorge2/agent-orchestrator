@@ -12,6 +12,7 @@ Run:
   python -m examples.codebase_explorer --headless "What does this project do?"
 """
 
+import os
 import ast
 import glob
 import re
@@ -25,14 +26,16 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from orcview import Agent, tool
 
 # All file operations are sandboxed to this directory.
-ROOT = Path.cwd().resolve()
+ROOT = Path(os.environ.get("ORCVIEW_EXPLORER_ROOT", Path.cwd())).resolve()
 
 
 def _safe_path(p: str) -> Path:
     """Resolve p and verify it stays inside ROOT. Raises ValueError if not."""
     resolved = (ROOT / p).resolve()
-    if not str(resolved).startswith(str(ROOT)):
+    if not resolved.is_relative_to(ROOT):
         raise ValueError(f"path '{p}' is outside the allowed root ({ROOT})")
+    if any(part.startswith('.') or part in {'node_modules', '__pycache__'} for part in resolved.relative_to(ROOT).parts):
+        raise ValueError("Hidden and dependency files are not exposed")
     return resolved
 
 
@@ -50,8 +53,13 @@ def _safe_dir(d: str) -> Path:
 def list_files(directory: str, pattern: str = "**/*.py") -> dict:
     """List files matching a glob pattern inside a directory (relative to project root)."""
     base = _safe_dir(directory)
-    matches = sorted(str(Path(m).relative_to(ROOT))
-                     for m in glob.glob(f"{base}/{pattern}", recursive=True))
+    matches = []
+    for match in glob.glob(f"{base}/{pattern}", recursive=True):
+        try:
+            matches.append(str(_safe_path(str(Path(match).relative_to(ROOT))).relative_to(ROOT)))
+        except ValueError:
+            continue
+    matches.sort()
     return {"files": matches, "count": len(matches)}
 
 
@@ -89,8 +97,8 @@ def search_in_directory(directory: str, pattern: str,
     results = []
     for match_path in sorted(glob.glob(f"{base}/{file_glob}", recursive=True)):
         try:
-            p = Path(match_path).resolve()
-            if not str(p).startswith(str(ROOT)):
+            p = _safe_path(str(Path(match_path).relative_to(ROOT)))
+            if not p.is_relative_to(ROOT):
                 continue
             for i, line in enumerate(p.read_text(errors="replace").splitlines(), 1):
                 if re.search(pattern, line):
@@ -166,7 +174,7 @@ def count_complexity(directory: str) -> dict:
     totals = {"files": 0, "lines": 0, "functions": 0, "classes": 0}
     for path in glob.glob(f"{base}/**/*.py", recursive=True):
         try:
-            source = Path(path).read_text(errors="replace")
+            source = _safe_path(str(Path(path).relative_to(ROOT))).read_text(errors="replace")
             tree   = ast.parse(source)
             totals["files"]     += 1
             totals["lines"]     += len(source.splitlines())

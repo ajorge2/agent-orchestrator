@@ -40,7 +40,9 @@ class Agent:
         model: str = "claude-sonnet-4-6",
         max_cycles: int = 12,
         system: str = "",
+        record_runs: bool = False,
     ):
+        self.record_runs   = bool(record_runs)
         self.label         = label
         self.model         = model
         self.max_cycles    = max_cycles
@@ -293,11 +295,10 @@ class Agent:
         _emit(metrics)
 
         # persist before emitting "done" so history refresh sees the new run
-        try:
+        if self.record_runs:
             from . import _db
+            _db.init_db()
             _db.save_run(run_id, question, metrics, all_events, version_id=_version_id)
-        except Exception:
-            pass
 
         _emit({"type": "done", "path": [s.name for s in state_history]})
 

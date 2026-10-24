@@ -1,3 +1,16 @@
 .env
 __pycache__/
 .DS_Store
+
+*.db
+*.sqlite
+*.sqlite3
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.pyc
+
+.pytest_cache/
+node_modules/
