@@ -150,4 +150,7 @@ def serve(agent, port: int = 5050) -> None:
     print(f"\nOrcView running → http://localhost:{port}  [{agent.label}]")
     print("r + Enter to reload\n")
     _start_reload_listener()
-    app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
+    from .mcp_public import create_public_app
+    import uvicorn
+    uvicorn.run(create_public_app(app), host="0.0.0.0", port=port,
+                log_level="critical", access_log=False)
