@@ -28,7 +28,7 @@ def create_public_app(flask_app):
     samples=tempfile.TemporaryDirectory(prefix='sqlharness-public-synthetic-')
     sql=create_sqlharness(create_demo_database(Path(samples.name)),max_rows=100)
     orc=create_orcview()
-    security=TransportSecuritySettings(allowed_hosts=['site--orcview--764vq9x779wv.code.run','127.0.0.1:*','localhost:*'],allowed_origins=['https://site--orcview--764vq9x779wv.code.run','https://site--codearchitect--74wvcb9qzxr6.code.run','http://127.0.0.1:*','http://localhost:*'])
+    security=TransportSecuritySettings(allowed_hosts=['site--orcview--764vq9x779wv.code.run','orcview.andrewjorge.com','127.0.0.1:*','localhost:*'],allowed_origins=['https://orcview.andrewjorge.com','https://codearchitect.andrewjorge.com','https://site--orcview--764vq9x779wv.code.run','https://site--codearchitect--74wvcb9qzxr6.code.run','http://127.0.0.1:*','http://localhost:*'])
     paths={'/mcp/orcview/server':orc,'/mcp/sqlharness/server':sql}
     apps={p:s.streamable_http_app(streamable_http_path=p,stateless_http=True,json_response=True,max_request_body_size=64000,transport_security=security) for p,s in paths.items()}
     legacy=WSGIMiddleware(flask_app)

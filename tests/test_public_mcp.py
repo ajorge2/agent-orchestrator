@@ -29,3 +29,14 @@ def test_orcview_public_contract_without_content():
             comparison=await c.call_tool('compare_runs',{'baseline_id':'demo-failure','candidate_id':'demo-success'})
             assert comparison.structured_content['delta']['total_latency_ms']==-50
     asyncio.run(run())
+
+
+def test_custom_domain_transport_security():
+    request={'jsonrpc':'2.0','id':1,'method':'initialize','params':{'protocolVersion':'2025-11-25','capabilities':{},'clientInfo':{'name':'domain-test','version':'1'}}}
+    with TestClient(create_public_app(Flask(__name__)),base_url='https://orcview.andrewjorge.com') as c:
+        for host in ['orcview.andrewjorge.com','site--orcview--764vq9x779wv.code.run']:
+            for endpoint in ['orcview','sqlharness']:
+                result=c.post('/mcp/'+endpoint+'/server',headers={'host':host,'origin':'https://'+host,'accept':'application/json,text/event-stream'},json=request)
+                assert result.status_code==200
+        assert c.post('/mcp/orcview/server',headers={'host':'evil.example','accept':'application/json,text/event-stream'},json=request).status_code==421
+        assert c.post('/mcp/orcview/server',headers={'origin':'https://evil.example','accept':'application/json,text/event-stream'},json=request).status_code==403
