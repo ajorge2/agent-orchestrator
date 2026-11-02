@@ -139,7 +139,7 @@ The data-analyst agent is where the reliability patterns were hardened against a
 
 The SDK collects and emits events in memory. Disk recording requires `Agent(..., record_runs=True)` and is disabled by default. Opted-in local runs are saved before the completion event. Those records can include questions, prompts, tool inputs, and outputs; the operator controls retention.
 
-The hosted dashboard keeps a bounded history in each private browser session, without a shared SQLite archive. Sessions expire after an hour of inactivity; the next request or process exit performs cleanup. Your questions and selected bundled source still go to Anthropic when a run starts.
+The hosted dashboard keeps a bounded history in each private browser session, without a shared SQLite archive. Sessions expire after an hour of inactivity; the next request or process exit performs cleanup. Your questions and selected bundled source go to the selected model provider (OpenAI or Anthropic) when a run starts.
 
 ### 8. Session-scoped configuration versions
 
@@ -257,7 +257,7 @@ cd data-analyst-agent
 python3 server.py                            # → http://localhost:5050
 ```
 
-Both need an Anthropic API key in a `.env` file (`ANTHROPIC_API_KEY=...`) and the two dependencies in `requirements.txt` (`pip install -r requirements.txt`). The app is container-ready — it binds to the port the host provides — so the same command that runs it locally runs it in production.
+The codebase explorer defaults to OpenAI `gpt-5.4-mini`: set `OPENAI_API_KEY` in the hosting service’s secret environment variables (or an ignored local `.env`). All specialists use the same default. Set `ORCVIEW_MODEL=claude-sonnet-4-6` and `ANTHROPIC_API_KEY` to use Anthropic instead. The separate data-analyst example still uses Anthropic. Install dependencies with `pip install -r requirements.txt`. Never submit server API keys through the public dashboard or commit them to Git. The app is container-ready — it binds to the port the host provides — so the same command that runs it locally runs it in production.
 
 ## MCP tools and local installation
 

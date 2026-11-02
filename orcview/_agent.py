@@ -37,14 +37,14 @@ class Agent:
         self,
         label: str,
         tools: list,
-        model: str = "claude-sonnet-4-6",
+        model: str | None = None,
         max_cycles: int = 12,
         system: str = "",
         record_runs: bool = False,
     ):
         self.record_runs   = bool(record_runs)
         self.label         = label
-        self.model         = model
+        self.model         = model or os.getenv("ORCVIEW_MODEL", "gpt-5.4-mini")
         self.max_cycles    = max_cycles
         self.system        = system
         self._tools        = tools  # @tool functions or Agent instances
@@ -126,8 +126,7 @@ class Agent:
             all_events.append(event)
             _outer_emit(event)
 
-        import anthropic
-        client = anthropic.Anthropic()
+        from ._providers import create_client
 
         # snapshot config so mid-run changes don't affect this run
         model         = self.model
@@ -159,6 +158,7 @@ class Agent:
         current = _State.START
 
         try:
+            client = create_client(model)
             while current is not _State.DONE:
                 state_history.append(current)
 
@@ -185,8 +185,10 @@ class Agent:
                     latency_ms = round((time.monotonic() - t0) * 1000)
 
                     usage = last_response.usage
-                    cost  = (usage.input_tokens  * COST_PER_INPUT_TOKEN +
-                             usage.output_tokens * COST_PER_OUTPUT_TOKEN)
+                    cost  = getattr(usage, "cost_usd", None)
+                    if cost is None:
+                        cost = (usage.input_tokens * COST_PER_INPUT_TOKEN +
+                                usage.output_tokens * COST_PER_OUTPUT_TOKEN)
                     total_input  += usage.input_tokens
                     total_output += usage.output_tokens
                     total_cost   += cost
@@ -252,7 +254,7 @@ class Agent:
                             "name":       block.name,
                             "result":     result_str,
                             "latency_ms": exec_ms,
-                            "is_error":   "error" in result,
+                            "is_error":   isinstance(result, dict) and "error" in result,
                         }
                         if sub_run_id:
                             tool_result_evt["sub_run_id"]      = sub_run_id
